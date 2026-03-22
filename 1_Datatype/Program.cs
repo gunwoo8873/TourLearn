@@ -13,6 +13,7 @@ public class Logic
     // Get the type of the value entered by the user and print it to the console
     switch (getValue)
     {
+      ///
       case string s when int.TryParse(s, out _):
         Console.WriteLine($"Value: {s}, Type: {typeof(int)}");
         break;
