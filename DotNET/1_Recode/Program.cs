@@ -2,6 +2,8 @@
 
 class Program
 {
+  // `readonly record struct` is don`t changed data index
+  // however you want do changed data index for `readonly` keyword remove
   readonly record struct Temperature(double HT, double LT)
   {
     public double AV => (HT + LT) / 2.8;
