@@ -1,5 +1,6 @@
 **/bin
 **/obj
+AZ-Credential/
 
 .vs
 .vscode
