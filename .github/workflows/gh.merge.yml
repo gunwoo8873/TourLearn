@@ -15,7 +15,7 @@ jobs:
             - name: Configure Git
               run: |
                   git config user.name "ChoiGunWoo"
-                  git config user.email "
+                  git config user.email "gunwoo8873@outlook.kr"
 
             - name: Merge into main
               run: |
