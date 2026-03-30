@@ -1,0 +1,32 @@
+name: Repo Merge Actions
+
+on:
+    push:
+        branches:
+            - gh
+            - net
+
+permissions:
+    contents: write
+
+jobs:
+    merge:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout source branch
+              uses: actions/checkout@v4
+              with:
+                  # `fetch-depth: 0`는 전체 커밋 기록을 가져와서 병합 작업에 필요한 모든 정보를 사용할 수 있도록 합니다.
+                  fetch-depth: 0
+
+            - name: Configure Git
+              run: |
+                  git config user.name "ChoiGunWoo"
+                  git config user.email "gunwoo8873@outlook.kr"
+
+            - name: Merge into main
+              run: |
+                  git fetch origin main ${{ github.ref_name }}
+                  git checkout -B main origin/main
+                  git merge --no-ff --no-edit origin/${{ github.ref_name }}
+                  git push origin main
