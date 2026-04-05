@@ -1,8 +1,8 @@
 **/bin
 **/obj
-AZ-Credential/
 
 .vs/
 .vscode/
 
 DotNET/
+AZ-Credential/
