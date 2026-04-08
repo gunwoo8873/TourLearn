@@ -1,4 +1,4 @@
-Writle-Host " Checking for Windows image health"
+Write-Host " Checking for Windows image health"
 DISM /Online /Cleanup-Image /CheckHealth
 
 Write-Host " Scanning for Windows image health issues"
