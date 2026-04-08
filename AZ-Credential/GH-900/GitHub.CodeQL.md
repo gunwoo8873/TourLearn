@@ -9,6 +9,10 @@
 * 고급 설정을 사용하여 워크플로를 리포지토리에 직접 추가하여 CodeQL-Actions을 사용하여 CLI에서 작업하는 사용자 지정 가능한 워크플로 파일이 생성된다.
 * 외부 CI 시스템에서 직접 CodeQL을 사용하면 쿼리 결과가 GitHub 코드 검사 경고로 표시된다.
 
+> [!NOTE]
+> **타사의 도구를 사용하여 코드 검사 안내**
+> GitHub에서 제공하는 코드 검사(CodeQL)대신 다른 플랫품에서 분석한 결과를 업로드할 수 있다. 외부에서 실행하는 코드 검사에 대한 경고는 GitHub 내에서 실행하는 것과 동일한 방식으로 표시된다. 외부에서 또는 GitHub Actions로 생성된 `정적분석 결과 교환 형식(SARIF)`파일을 업로드하여 리포지토리의 타사 도구에서 코드 검사 경고를 볼 수 있다.
+
 ### 설정
 리포지토리에 대한 쓰기 권한이 있다면 해당 리포지토리에 대한 코드 검사를 설정하거나 구성할 수 있다.
 
@@ -20,3 +24,32 @@
   * on:pull_request 및 on:push 트리거는 각 다른 용도로 유용한 코드 검색의 기본값
 * 코드 검색을 활성화 준비가 되면 CodeQL 활성화 선택
   * 기본 CodeQL 분석 워크플로에서는 코드 검사가 보호된 분기로 변경 내용을 푸시하거나 기본 분기에 대한 끌어오기 요청을 실행할 때마다 코드를 분석하도록 구성된다. 푸시가 수행되면 해당 코드 검색이 자동으로 수행
+
+### SARIF 파일 안내
+SARIF 파일의 데이터를 읽어 리포지토리에 코드 검사 경고를 만든다. CodeQL을 포함해 많은 정적 분석 보안 테스트 도구를 사용하여 파일을 생성하고, 결과에서 SARIF 2.1.0 Ver을 사용해야 한다.
+
+### CodeQL 청구
+[CodeQL Billing Information](./GitHub.Billing.md/#codeql-청구)
+
+### CodeQL API
+코드 검사 API를 사용하면 리포지토리에서 코드 검사 경고, 분석, 데이터베이스 및 기본 설정 구성에 대한 정보를 검사할 수 있다. 또한 코드 검사 경고 및 기본 설정 구성을 업데이트할 수 있으며 엔드포인트를 통해 조직의 코드 검사 경고에 대한 자동화된 보고서를 만들거나 오프라인 코드 검사 도구를 사용하여 생성된 분석 결과를 업로드할 수 있다.  
+`https://api.github.com`에서 HTTPS를 통해 API에 액세스할 수 잇으며 모든 데이터가 JSON의 포맷으로 전송되고 수신된다. 사용자 지정 미디어 형식을 사용하므로 소비자들이 수신하고자 하는 데이터의 형식을 선택할 수 있다. 미디어 유형은 리소스에 따라 다르기 때문에 독립적으로 변경하고 다른 리소스에서 지원하지 않는 형식을 지원할 수 있다.  
+`/analyses/{analyses_id}` 엔드포인트로 전송된 GET 요청과 함게 이 미디어 형식을 사용할 수 있다. 작업에서 미디어 형식을 사용하면 기본 미디어 형식을 사용할 때 반환되는 분석의 요약이 아니라 지정된 분석을 위해 업로드된 실제 데이터의 하위 집합이 응답에 포함된다. `gituhb/alertNumber`및 `github/alertUrl` 속성 같은 추가 데이터도 응답에 포함되어 데이터는 SARIF 버전 2.1.0으로 형식이 지정된다.
+
+> [!TIP]
+> 해당 소스 스크립트 예시는 [Example API Script](./Source/CodeQL.sh)에서 확인 가능하다.
+
+## CodeQL CLI
+코드 분석에 사용할 수 있는 독립 실행형 명령어로 주로 코드베이스, 데이터베이스의 표현을 생성하는 것이다. 대화형으로 쿼리하거나 쿼리 프로그램을 실행하여 SARIF 형식으로 결과 집합을 생성하고 결과를 GitHub.com 업로드할 수 있도록 하며, 유지 관리되는 공용 리포지토리에서 `https://github.com/github/codeql-action/releases`에서 CodeQL 번들을 다운로드한다.
+
+* 번들에서 다음과 같이 포함된다.
+  * CodeQL CLI
+  * `https://github.com/github/codeql`에서 호환되는 쿼리 및 라이브러리 버전
+  * 번들에 포함되는 모든 쿼리의 사전 컴파일 버전
+
+## GitHub Actions를 사용한 코드 검사 분석
+타사 SARIF 파일을 리포지토리에 업로드하려면 GitHub Actions 워크플로가 필요하며 `.yml` 파일로 구성된 하나 이상의 작업으로 이루어진 자동화 프로세스로 리포지토리의 `.github/workflows` 디렉터리에 저장된다. 워크플로는 upload-sarif 리포지토리에 속한 github/codeql-action 작업을 사용하고 업로드 구성에 사용할 수 있는 입력 매개 변수가 포함되어 있다.  
+기본 입력 매개 변수는 `sarif-file`인데 이것을 업로드할 SARIF 파일의 파일 또는 디렉터리를 구성한다. 디렉터리나 파일 경로는 리포지토리의 루트가 기준으로 인식한다. `upload-sarif` 및 `push` 이벤트가 발생할 때 실행되도록 `scheduled` 작업을 구성할 수 있다.
+
+> [1. CodeQL YML Ref](https://learn.microsoft.com/ko-kr/training/modules/configure-code-scanning/3-enable-code-scanning-with-third-party-tools)
+> [2. GitHub Actions CodeQL YML](GitHub.Actions.md/#codeql-코드-검사-분석)
