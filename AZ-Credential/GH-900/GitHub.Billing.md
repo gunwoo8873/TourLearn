@@ -187,3 +187,6 @@ GitHub LFS는 Git 리포지토리와 별도로 큰 이진 파일을 저장하는
 * 대용량 파일에 외부 스토리지 서비스를 사용
 * 사용되지 않는 대용량 파일을 정리하여 스토리지의 공간 확보 및 최적화
 * Git LFS 파일 정리를 사용하도록 설정하여 참조되지 않은 개체를 제거
+
+
+[NEXT GitHub ClientAPPs](GitHub.ClientApps.md)
