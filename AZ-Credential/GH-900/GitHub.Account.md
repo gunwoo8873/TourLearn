@@ -69,4 +69,4 @@ GitHub에서는 다양한 플랜의 제공하는 제품들이 다음과 같다.
   * GitHub Enterprise Server와 Cloud 간에 선택한 데이터를 안전하게 공유할 수 있는 GitHub Connect를 통해 통합 기여, 중앙 집중식 사용자 ID 및 환경 전반의 가시성 향상
   * 향상된 코드 및 중속성 보호를 위해 GitHub Advanced Security 구해 옵션
 
-  [NEXT GitHub Billing](./GitHub.Billing.md)
+[NEXT GitHub Billing](./GitHub.Billing.md)
